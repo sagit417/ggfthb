@@ -1,244 +1,461 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy New Year</title>
-  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #ff6ec4, #7873f5);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-      overflow-x: hidden;
-    }
-    h1 {
-      font-family: 'Permanent Marker', cursive;
-      font-size: 4rem;
-      margin: 0.5rem;
-    }
-    h2 {
-      font-family: 'Permanent Marker', cursive;
-      font-size: 2rem;
-      margin: 0.5rem;
-    }
-    #countdown {
-      font-size: 2rem;
-      margin: 2rem 0;
-    }
-    #giftContainer {
-      position: relative;
-      margin-top: 2rem;
-      cursor: pointer;
-      width: 150px;
-      height: 150px;
-    }
-    #giftContainer img {
-      width: 100%;
-      height: 100%;
-      transition: transform 0.3s;
-    }
-    #giftContainer:hover img {
-      transform: scale(1.1);
-    }
-    #giftMessage {
-      margin-top: 2rem;
-      font-size: 1.5rem;
-      max-width: 600px;
-      line-height: 1.5;
-      opacity: 0;
-      transition: opacity 0.5s;
-    }
-    .social-links a {
-      margin: 0 10px;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      transition: transform 0.2s;
-    }
-    .social-links a:hover {
-      transform: scale(1.2);
-    }
-    footer {
-      margin-top: 3rem;
-      font-size: 1rem;
-      color: #ffd700;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year | Claim Your Gift</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Press+Start+2P&family=Rubik+Glitch&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    /* Confetti */
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background-color: #fff;
-      opacity: 0.9;
-      animation: fall 3s linear forwards;
-      z-index: 9999;
-    }
-    @keyframes fall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(800px) rotate(720deg); opacity: 0; }
-    }
-  </style>
+    <style>
+        :root {
+            --neon-green: #39ff14;
+            --neon-purple: #bc13fe;
+            --bg-dark: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(57, 255, 20, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(188, 19, 254, 0.1) 0%, transparent 20%);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            font-family: 'Rubik Glitch', cursive;
+            font-size: 3.5rem;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+            margin-bottom: 0.5rem;
+            animation: glitch 2s infinite;
+        }
+
+        h2 {
+            font-family: 'Great Vibes', cursive; /* Decorative stylish font */
+            font-size: 2.5rem;
+            color: var(--neon-purple);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px var(--neon-purple);
+        }
+
+        /* --- COUNTDOWN --- */
+        .countdown-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .time-box {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 10px;
+            min-width: 80px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .time-val {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            color: var(--neon-green);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .time-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        /* --- GIFT BOX AREA --- */
+        .gift-section {
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            padding: 2rem;
+            background: var(--glass);
+            border: 1px solid var(--neon-green);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.1);
+            position: relative;
+        }
+
+        .gift-icon {
+            font-size: 4rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        .gift-icon.locked {
+            filter: grayscale(100%);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .gift-icon.unlocked {
+            animation: bounce 2s infinite;
+            filter: drop-shadow(0 0 15px var(--neon-purple));
+        }
+
+        .cta-btn {
+            background: var(--neon-green);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            border-radius: 5px;
+            transition: 0.2s;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            background: #fff;
+        }
+
+        .cta-btn:disabled {
+            background: #333;
+            color: #777;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .quote-display {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #fff;
+            border-left: 4px solid var(--neon-purple);
+            padding-left: 15px;
+            text-align: left;
+            animation: fadeIn 1s ease;
+        }
+
+        /* --- LINKS --- */
+        .social-links {
+            margin-top: 3rem;
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: 0.3s;
+            background: var(--glass);
+        }
+
+        .social-link:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        /* --- FOOTER --- */
+        .footer-note {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            opacity: 0.6;
+            text-align: center;
+            max-width: 80%;
+            padding-bottom: 2rem;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px var(--neon-purple), -2px -2px var(--neon-green); }
+            50% { text-shadow: -2px 2px var(--neon-purple), 2px -2px var(--neon-green); }
+            100% { text-shadow: 2px 2px var(--neon-purple), -2px -2px var(--neon-green); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile tweaks */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 1.8rem; }
+            .countdown-container { gap: 0.5rem; }
+            .time-box { min-width: 60px; padding: 0.5rem; }
+            .time-val { font-size: 0.9rem; }
+        }
+    </style>
 </head>
 <body>
-  <h1>Happy New Year</h1>
-  <h2>Degens Open Your Gift</h2>
 
-  <div id="countdown">Loading countdown...</div>
+    <h1>HAPPY NEW YEAR</h1>
+    <h2>Degens Open Your Gift</h2>
 
-  <div id="giftContainer">
-    <img id="giftBox" src="https://i.ibb.co/2t5Q4k0/gift-closed.png" alt="Gift Box">
-  </div>
+    <div id="countdown" class="countdown-container">
+        <div class="time-box">
+            <span class="time-val" id="days">00</span>
+            <span class="time-label">Days</span>
+        </div>
+        <div class="time-box">
+            <span class="time-val" id="hours">00</span>
+            <span class="time-label">Hours</span>
+        </div>
+        <div class="time-box">
+            <span class="time-val" id="minutes">00</span>
+            <span class="time-label">Mins</span>
+        </div>
+        <div class="time-box">
+            <span class="time-val" id="seconds">00</span>
+            <span class="time-label">Secs</span>
+        </div>
+    </div>
 
-  <div id="giftMessage"></div>
+    <div class="gift-section">
+        <div class="gift-icon locked" id="giftIcon">🎁</div>
+        <div id="statusText" style="margin-top:10px; font-weight:bold;">LOCKED UNTIL DEC 31</div>
+        
+        <button id="claimBtn" class="cta-btn" disabled onclick="claimGift()">
+            Claim Gift
+        </button>
 
-  <div class="social-links">
-    <a href="https://coinmarketcap.com/" target="_blank">💰 Coin</a>
-    <a href="https://twitter.com/" target="_blank">🐦 Twitter</a>
-    <a href="https://telegram.org/" target="_blank">✈️ Telegram</a>
-  </div>
+        <div id="quoteResult" class="quote-display"></div>
+    </div>
 
-  <footer>
-    One gift per user🎁. No signup needed😎. Just vibes😄. Come back when countdown ends and claim your gift 🎁.
-  </footer>
+    <div class="social-links">
+        <a href="#" class="social-link">🪙 Coin</a>
+        <a href="#" class="social-link">🐦 Twitter</a>
+        <a href="#" class="social-link">✈️ Telegram</a>
+    </div>
 
-  <script>
-    const Messages = [ 
-      "⚔️ The harder the conflict, the more glorious the triumph.",
-      "🪜 There is no elevator to success. You have to take the stairs.",
-      "🏔️ I have stood on a mountain of no's for one yes.",
-      "✨ The difference between try and triumph is just a little 'umph'!",
-      "🔑 If you want something you've never had, you must do something you've never done.",
-      "🏃 Perseverance is not a long race; it is many short races one after the other.",
-      "🧗 Fall seven times, stand up eight.",
-      "🧱 Brick walls are there to show us how badly we want something.",
-      "🧠 It's not that I'm so smart, it's just that I stay with problems longer.",
-      "🏁 When you feel like quitting, think about why you started.",
-      "🪜 Success is stumbling from failure to failure with no loss of enthusiasm.",
-      "🧂 Failure is the condiment that gives success its flavor.",
-      "💡 I have not failed. I've just found 10,000 ways that won't work.",
-      "⏳ Don't fear failure. Fear being in the exact same place next year.",
-      "🛡️ You may encounter many defeats, but you must not be defeated.",
-      "⏰ A goal is a dream with a deadline.",
-      "🗺️ Setting goals is the first step in turning the invisible into the visible.",
-      "☁️ The only limit to your achievements is the reach of your dreams.",
-      "👤 What you become by achieving your goals is the real reward.",
-      "🌉 Discipline is the bridge between goals and accomplishment.",
-      "📈 Small daily improvements are the key to staggering long-term results.",
-      "📖 The only place where success comes before work is in the dictionary.",
-      "⏱️ Don't watch the clock; do what it does. Keep going.",
-      "⚡ Hard work beats talent when talent doesn't work hard.",
-      "🌤️ You have to fight through bad days to earn the best days of your life.",
-      "✔️ It always seems impossible until it's done.",
-      "🎬 The way to get started is to quit talking and begin doing.",
-      "🌱 You don't have to be great to start, but you have to start to be great.",
-      "📅 A year from now you will wish you had started today.",
-      "🗝️ Action is the foundational key to all success.",
-      "⌛ Don't let the fear of time stop you. The time will pass anyway.",
-      "🍀 The only thing that overcomes hard luck is hard work.",
-      "🍎 The fruit of your own hard work is the sweetest.",
-      "🛠️ The reward for work well done is the opportunity to do more.",
-      "❤️ Success is about the difference you make in people's lives.",
-      "🌟 Believe in yourself — every small step counts toward greatness.",
-      "💪 Strength grows in moments when you think you cannot continue.",
-      "🔥 Your perseverance today is laying the foundation for tomorrow.",
-      "🌱 Growth comes from embracing challenges, not avoiding them.",
-      "✨ You have the power to turn obstacles into opportunities.",
-      "🧠 Focus on progress, not perfection.",
-      "🚀 Take action today — momentum builds confidence and results.",
-      "💡 Every setback is a setup for a stronger comeback.",
-      "🏆 Small wins compound into extraordinary achievements over time.",
-      "🌈 Your attitude shapes your reality.",
-      "📈 Consistency beats intensity — keep moving forward daily.",
-      "🎯 Set clear intentions and act on them.",
-      "💎 Your potential exceeds what you currently see in yourself.",
-      "🛡️ Courage is taking action despite fear.",
-      "🛠️ Mastery is built through practice, patience, and persistence.",
-      "🌞 Embrace each day as a new chance to improve.",
-      "💬 Speak kindly to yourself — self-belief fuels progress.",
-      "📅 Small, consistent habits create monumental change over time.",
-      "💫 Your efforts matter, even when unseen.",
-      "🌍 Your impact grows with every intentional action.",
-      "🧭 Direction matters more than speed.",
-      "🌠 Every choice today influences the life you build tomorrow.",
-      "🪁 Let go of doubt and rise with confidence.",
-      "🚪 Opportunity often appears disguised as hard work.",
-      "📦 Each challenge carries a lesson that makes you stronger.",
-      "🤝 Helping others strengthens your own purpose.",
-      "🧠 Keep learning — growth never stops.",
-      "🎉 Your achievements matter.",
-      "🛤️ Stay patient — great results take time.",
-      "💪 Your resilience defines your journey.",
-      "🕯️ Shine even in quiet moments.",
-      "🛠️ Skills you build today shape tomorrow.",
-      "🌟 You are closer than you think.",
-      "🪙 Small habits today create big results later."
-    ];
+    <div class="footer-note">
+        one gift per user🎁. no signup needed😎. just vibes😄.<br>
+        come back when countdown ends and claim your gift 🎁.
+    </div>
 
-    const giftContainer = document.getElementById('giftContainer');
-    const giftBox = document.getElementById('giftBox');
-    const giftMessage = document.getElementById('giftMessage');
-    const countdownEl = document.getElementById('countdown');
+    <script>
+        // --- CONFIGURATION ---
+        // Target Date: December 31, 2025 at 9:00 PM (21:00)
+        const targetDate = new Date('December 31, 2025 21:00:00').getTime();
+        
+        // --- DATA: MESSAGES ---
+        const Messages = [
+            "⚔️ The harder the conflict, the more glorious the triumph.",
+            "🪜 There is no elevator to success. You have to take the stairs.",
+            "🏔️ I have stood on a mountain of no's for one yes.",
+            "✨ The difference between try and triumph is just a little 'umph'!",
+            "🔑 If you want something you've never had, you must do something you've never done.",
+            "🏃 Perseverance is not a long race; it is many short races one after the other.",
+            "🧗 Fall seven times, stand up eight.",
+            "🧱 Brick walls are there to show us how badly we want something.",
+            "🧠 It's not that I'm so smart, it's just that I stay with problems longer.",
+            "🏁 When you feel like quitting, think about why you started.",
+            "🪜 Success is stumbling from failure to failure with no loss of enthusiasm.",
+            "🧂 Failure is the condiment that gives success its flavor.",
+            "💡 I have not failed. I've just found 10,000 ways that won't work.",
+            "⏳ Don't fear failure. Fear being in the exact same place next year.",
+            "🛡️ You may encounter many defeats, but you must not be defeated.",
+            "⏰ A goal is a dream with a deadline.",
+            "🗺️ Setting goals is the first step in turning the invisible into the visible.",
+            "☁️ The only limit to your achievements is the reach of your dreams.",
+            "👤 What you become by achieving your goals is the real reward.",
+            "🌉 Discipline is the bridge between goals and accomplishment.",
+            "📈 Small daily improvements are the key to staggering long-term results.",
+            "📖 The only place where success comes before work is in the dictionary.",
+            "⏱️ Don't watch the clock; do what it does. Keep going.",
+            "⚡ Hard work beats talent when talent doesn't work hard.",
+            "🌤️ You have to fight through bad days to earn the best days of your life.",
+            "✔️ It always seems impossible until it's done.",
+            "🎬 The way to get started is to quit talking and begin doing.",
+            "🌱 You don't have to be great to start, but you have to start to be great.",
+            "📅 A year from now you will wish you had started today.",
+            "🗝️ Action is the foundational key to all success.",
+            "⌛ Don't let the fear of time stop you. The time will pass anyway.",
+            "🍀 The only thing that overcomes hard luck is hard work.",
+            "🍎 The fruit of your own hard work is the sweetest.",
+            "🛠️ The reward for work well done is the opportunity to do more.",
+            "❤️ Success is about the difference you make in people's lives.",
+            "🌟 Believe in yourself — every small step counts toward greatness.",
+            "💪 Strength grows in moments when you think you cannot continue.",
+            "🔥 Your perseverance today is laying the foundation for tomorrow.",
+            "🌱 Growth comes from embracing challenges, not avoiding them.",
+            "✨ You have the power to turn obstacles into opportunities.",
+            "🧠 Focus on progress, not perfection.",
+            "🚀 Take action today — momentum builds confidence and results.",
+            "💡 Every setback is a setup for a stronger comeback.",
+            "🏆 Small wins compound into extraordinary achievements over time.",
+            "🌈 Your attitude shapes your reality.",
+            "📈 Consistency beats intensity — keep moving forward daily.",
+            "🎯 Set clear intentions and act on them.",
+            "💎 Your potential exceeds what you currently see in yourself.",
+            "🛡️ Courage is taking action despite fear.",
+            "🛠️ Mastery is built through practice, patience, and persistence.",
+            "🌞 Embrace each day as a new chance to improve.",
+            "💬 Speak kindly to yourself — self-belief fuels progress.",
+            "📅 Small, consistent habits create monumental change over time.",
+            "💫 Your efforts matter, even when unseen.",
+            "🌍 Your impact grows with every intentional action.",
+            "🧭 Direction matters more than speed.",
+            "🌠 Every choice today influences the life you build tomorrow.",
+            "🪁 Let go of doubt and rise with confidence.",
+            "🚪 Opportunity often appears disguised as hard work.",
+            "📦 Each challenge carries a lesson that makes you stronger.",
+            "🤝 Helping others strengthens your own purpose.",
+            "🧠 Keep learning — growth never stops.",
+            "🎉 Your achievements matter.",
+            "🛤️ Stay patient — great results take time.",
+            "💪 Your resilience defines your journey.",
+            "🕯️ Shine even in quiet moments.",
+            "🛠️ Skills you build today shape tomorrow.",
+            "🌟 You are closer than you think.",
+            "🪙 Small habits today create big results later."
+        ];
 
-    const giftTime = new Date('2025-12-31T21:00:00').getTime();
-    const storageKey = 'giftClaimed';
+        // --- ELEMENTS ---
+        const els = {
+            days: document.getElementById('days'),
+            hours: document.getElementById('hours'),
+            mins: document.getElementById('minutes'),
+            secs: document.getElementById('seconds'),
+            btn: document.getElementById('claimBtn'),
+            quoteBox: document.getElementById('quoteResult'),
+            giftIcon: document.getElementById('giftIcon'),
+            status: document.getElementById('statusText'),
+            countdownContainer: document.getElementById('countdown')
+        };
 
-    // Countdown Timer
-    const countdownInterval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = giftTime - now;
+        // --- LOCAL STORAGE CHECK ---
+        const userState = {
+            hasClaimed: localStorage.getItem('degenGiftClaimed') === 'true',
+            savedQuote: localStorage.getItem('degenGiftQuote')
+        };
 
-      if (distance <= 0) {
-        clearInterval(countdownInterval);
-        countdownEl.innerHTML = "🎉 The gift is now available! 🎉";
-        if (!localStorage.getItem(storageKey)) {
-          giftContainer.style.cursor = 'pointer';
-        } else {
-          giftBox.src = "https://i.ibb.co/2t5Q4k0/gift-opened.png"; // already opened
-          giftMessage.style.opacity = 1;
+        // --- COUNTDOWN LOGIC ---
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // If user already claimed, force unlocked state immediately
+            if (userState.hasClaimed) {
+                unlockUI(true); // true = showing saved quote
+                return;
+            }
+
+            // If time is up
+            if (distance < 0) {
+                unlockUI(false); // false = ready to claim
+            } else {
+                // Calculation
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                els.days.innerText = days < 10 ? '0' + days : days;
+                els.hours.innerText = hours < 10 ? '0' + hours : hours;
+                els.mins.innerText = minutes < 10 ? '0' + minutes : minutes;
+                els.secs.innerText = seconds < 10 ? '0' + seconds : seconds;
+            }
         }
-      } else {
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-      }
-    }, 1000);
 
-    // Confetti generator
-    function createConfetti() {
-      for (let i = 0; i < 100; i++) {
-        const confetti = document.createElement('div');
-        confetti.classList.add('confetti');
-        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-        confetti.style.left = Math.random() * window.innerWidth + 'px';
-        confetti.style.animationDuration = 2 + Math.random() * 3 + 's';
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 5000);
-      }
-    }
+        // --- UI STATES ---
+        function unlockUI(alreadyClaimed) {
+            clearInterval(timerInterval);
+            els.countdownContainer.style.display = 'none'; // Hide countdown
+            els.giftIcon.classList.remove('locked');
+            els.giftIcon.classList.add('unlocked');
+            
+            if(alreadyClaimed) {
+                els.status.innerText = "GIFT CLAIMED ✅";
+                els.btn.style.display = 'none'; // Hide button
+                els.quoteBox.style.display = 'block';
+                els.quoteBox.innerText = userState.savedQuote;
+            } else {
+                els.status.innerText = "GIFT UNLOCKED! OPEN NOW";
+                els.btn.disabled = false;
+                els.btn.innerText = "OPEN GIFT 🎁";
+            }
+        }
 
-    // Gift Click
-    giftContainer.addEventListener('click', () => {
-      const now = new Date().getTime();
-      if (now >= giftTime && !localStorage.getItem(storageKey)) {
-        const randomIndex = Math.floor(Math.random() * Messages.length);
-        giftMessage.innerHTML = Messages[randomIndex];
-        giftMessage.style.opacity = 1;
-        giftBox.src = "https://i.ibb.co/2t5Q4k0/gift-opened.png"; // open gift
-        localStorage.setItem(storageKey, 'true');
-        createConfetti();
-      }
-    });
-  </script>
+        // --- CLAIM FUNCTION ---
+        function claimGift() {
+            // Logic for picking random quote
+            const randomIndex = Math.floor(Math.random() * Messages.length);
+            const selectedQuote = Messages[randomIndex];
+
+            // Save to Local Storage (One gift per user)
+            localStorage.setItem('degenGiftClaimed', 'true');
+            localStorage.setItem('degenGiftQuote', selectedQuote);
+
+            // Update UI
+            els.btn.style.display = 'none';
+            els.status.innerText = "CONGRATS DEGEN! 🎉";
+            els.quoteBox.innerText = selectedQuote;
+            els.quoteBox.style.display = 'block';
+
+            // FIREWORKS / CONFETTI
+            triggerConfetti();
+        }
+
+        function triggerConfetti() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            var random = function(min, max) { return Math.random() * (max - min) + min; }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                // since particles fall down, start a bit higher than random
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: random(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: random(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        // Start Timer
+        const timerInterval = setInterval(updateCountdown, 1000);
+        updateCountdown(); // Run immediately on load
+
+    </script>
 </body>
 </html>
