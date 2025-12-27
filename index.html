@@ -17,6 +17,7 @@
       justify-content: center;
       height: 100vh;
       text-align: center;
+      overflow-x: hidden;
     }
     h1 {
       font-family: 'Permanent Marker', cursive;
@@ -52,6 +53,8 @@
       font-size: 1.5rem;
       max-width: 600px;
       line-height: 1.5;
+      opacity: 0;
+      transition: opacity 0.5s;
     }
     .social-links a {
       margin: 0 10px;
@@ -67,6 +70,21 @@
       margin-top: 3rem;
       font-size: 1rem;
       color: #ffd700;
+    }
+
+    /* Confetti */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #fff;
+      opacity: 0.9;
+      animation: fall 3s linear forwards;
+      z-index: 9999;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(800px) rotate(720deg); opacity: 0; }
     }
   </style>
 </head>
@@ -185,6 +203,7 @@
           giftContainer.style.cursor = 'pointer';
         } else {
           giftBox.src = "https://i.ibb.co/2t5Q4k0/gift-opened.png"; // already opened
+          giftMessage.style.opacity = 1;
         }
       } else {
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -195,14 +214,29 @@
       }
     }, 1000);
 
+    // Confetti generator
+    function createConfetti() {
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.animationDuration = 2 + Math.random() * 3 + 's';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+
     // Gift Click
     giftContainer.addEventListener('click', () => {
       const now = new Date().getTime();
       if (now >= giftTime && !localStorage.getItem(storageKey)) {
         const randomIndex = Math.floor(Math.random() * Messages.length);
         giftMessage.innerHTML = Messages[randomIndex];
+        giftMessage.style.opacity = 1;
         giftBox.src = "https://i.ibb.co/2t5Q4k0/gift-opened.png"; // open gift
         localStorage.setItem(storageKey, 'true');
+        createConfetti();
       }
     });
   </script>
